@@ -52,7 +52,7 @@ resource "aws_route_table_association" "name" {
 //attach igw to vpc
 resource "aws_internet_gateway_attachment" "igw_vpc_attach"{
     internet_gateway_id = aws_internet_gateway.igw.id
-    vpc_id = provisioner_vpc.id 
+    vpc_id = aws_vpc.provisioner_vpc.id 
 }
 
 resource "aws_security_group" "provisioner-sg" {
@@ -97,7 +97,7 @@ output "key-pair-path" {
 }
 
 resource "aws_instance" "ec2_terraform"{
-    ami = data.aws_ami.latest_ubuntu.id
+    ami = var.aws_ubuntu_ami_id
     instance_type = var.instance_type_basic
     key_name = aws_key_pair.generated_key.key_name
     security_groups = [aws_security_group.provisioner-sg.name]
@@ -105,4 +105,7 @@ resource "aws_instance" "ec2_terraform"{
     tags = {
       Name = "${local.proj_name}-ec2-instance"
     }
+}
+output "instance-public-ip" {
+  value = aws_instance.ec2_terraform.public_ip
 }
