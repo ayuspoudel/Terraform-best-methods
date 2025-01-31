@@ -87,7 +87,7 @@ resource "aws_security_group" "provisioner-sg" {
 //generating key-pair
 resource "aws_key_pair" "generated_key" {
   key_name   = "${local.proj_name}-key-pair"
-  public_key = file("${var.key_pair_path}") # Path to my local SSH public key
+  public_key = "${var.key_pair_path}" # Path to my local SSH public key
 }
 output "key-pair-path" {
   value = aws_key_pair.generated_key.public_key
